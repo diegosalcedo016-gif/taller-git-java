@@ -1,0 +1,23 @@
+# Archivos compilados de Java
+*.class
+
+# Carpetas de compilacion
+bin/
+build/
+out/
+target/
+
+# Archivos generados automaticamente por Java y herramientas
+*.jar
+*.war
+*.ear
+*.jmod
+hs_err_pid*
+replay_pid*
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Configuracion de VS Code (opcional)
+.vscode/
