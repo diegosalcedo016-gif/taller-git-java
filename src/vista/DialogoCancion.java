@@ -25,6 +25,7 @@ public class DialogoCancion extends JDialog {
         campoTitulo = Estilos.crearCampoTexto();
         campoArtista = Estilos.crearCampoTexto();
         campoDuracion = Estilos.crearCampoTexto();
+        Estilos.aplicarFiltroDecimal(campoDuracion);
 
         configurarVentana();
         construirFormulario();
@@ -36,7 +37,7 @@ public class DialogoCancion extends JDialog {
     }
 
     private void configurarVentana() {
-        setSize(380, 230);
+        setSize(460, 260);
         setLocationRelativeTo(getParent());
         setResizable(false);
         setLayout(new BorderLayout(12, 12));
@@ -72,7 +73,7 @@ public class DialogoCancion extends JDialog {
 
     private void guardarCancion() {
         try {
-            double duracion = Double.parseDouble(campoDuracion.getText().trim());
+            double duracion = Double.parseDouble(campoDuracion.getText().trim().replace(",", "."));
             cancionCreada = new Cancion(campoTitulo.getText(), campoArtista.getText(), duracion);
             dispose();
         } catch (NumberFormatException ex) {

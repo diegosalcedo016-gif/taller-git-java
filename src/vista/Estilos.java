@@ -2,14 +2,19 @@ package vista;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  * Utilidad interna para mantener una apariencia visual consistente.
@@ -25,7 +30,7 @@ final class Estilos {
     static final Color COLOR_TEXTO = new Color(244, 247, 250);
     static final Color COLOR_TEXTO_SECUNDARIO = new Color(169, 179, 191);
     static final Color COLOR_BORDE = new Color(58, 67, 80);
-    static final Font FUENTE_BASE = new Font("Segoe UI", Font.PLAIN, 14);
+    static final Font FUENTE_BASE = new Font("Segoe UI", Font.PLAIN, 15);
     static final Font FUENTE_TITULO = new Font("Segoe UI", Font.BOLD, 32);
 
     private Estilos() {
@@ -74,8 +79,37 @@ final class Estilos {
         campo.setSelectedTextColor(COLOR_TEXTO);
         campo.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE),
-                BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+                BorderFactory.createEmptyBorder(9, 12, 9, 12)));
+        campo.setPreferredSize(new Dimension(220, 40));
+        campo.setMinimumSize(new Dimension(180, 40));
         return campo;
+    }
+
+    static void aplicarFiltroDecimal(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                    throws BadLocationException {
+                reemplazarSiEsValido(fb, offset, 0, string, attr);
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                reemplazarSiEsValido(fb, offset, length, text, attrs);
+            }
+
+            private void reemplazarSiEsValido(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                String textoActual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nuevoTexto = textoActual.substring(0, offset) + (text == null ? "" : text)
+                        + textoActual.substring(offset + length);
+
+                if (nuevoTexto.matches("\\d{0,4}([\\.,]\\d{0,2})?")) {
+                    fb.replace(offset, length, text, attrs);
+                }
+            }
+        });
     }
 
     private static JButton crearBotonBase(String texto) {

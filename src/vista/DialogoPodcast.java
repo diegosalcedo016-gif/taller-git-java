@@ -25,6 +25,7 @@ public class DialogoPodcast extends JDialog {
         campoTitulo = Estilos.crearCampoTexto();
         campoPresentador = Estilos.crearCampoTexto();
         campoDuracion = Estilos.crearCampoTexto();
+        Estilos.aplicarFiltroDecimal(campoDuracion);
 
         configurarVentana();
         construirFormulario();
@@ -36,7 +37,7 @@ public class DialogoPodcast extends JDialog {
     }
 
     private void configurarVentana() {
-        setSize(390, 230);
+        setSize(470, 260);
         setLocationRelativeTo(getParent());
         setResizable(false);
         setLayout(new BorderLayout(12, 12));
@@ -72,7 +73,7 @@ public class DialogoPodcast extends JDialog {
 
     private void guardarPodcast() {
         try {
-            double duracion = Double.parseDouble(campoDuracion.getText().trim());
+            double duracion = Double.parseDouble(campoDuracion.getText().trim().replace(",", "."));
             podcastCreado = new Podcast(campoTitulo.getText(), campoPresentador.getText(), duracion);
             dispose();
         } catch (NumberFormatException ex) {
